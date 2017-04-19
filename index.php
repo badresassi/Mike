@@ -39,6 +39,10 @@
 		</div>
 		<div id="mike">
 		</div>
+		<div>
+			<p id="message"></p>
+		</div>
+		</div>
 		<script>
 			$(function() {
 				$( "input" ).click(function(e) {
@@ -49,9 +53,9 @@
 
 					// Console du meillieur Prenom au monde. PS: Mike > Vincent
 					console.log("Mike")
-					
+
 					// Récuperation de la valeur de notre textarea.
-					var myRequest = $("#sql").val(); 
+					var myRequest = $("#sql").val();
 
 					var dataBase = $("#databaseSelect").val();
 
@@ -61,12 +65,23 @@
 						method: "POST", // Methode de la requete
 						data: {requet : myRequest, Mike: dataBase} // Data envoyer à la page
 					});
-					
+
 					request.done(function( msg ) { // Success
-						$( "#mike" ).html( msg ); // Mise à jour du contenu de la div qui a pour id "Mike"
+					console.log(msg);
+					msg = JSON.parse(msg);
+					console.info(msg);
+					if(msg.erreur == false) {
+						$( "#mike" ).html( msg.message ); // Mise à jour du contenu de la div qui a pour id "Mike"
 						$( "#requet" ).html( myRequest ); // Mise à jour du contenu de la span qui a pour id "requet" generer dans le tableau envoyer par le php
+
+						$("#message").text("Voici les resultats de votre requete")
+						$("#message").css("background-color", "green");
+					}else {
+						$("#message").text(msg.message)
+						$("#message").css("background-color", "red");
+					}
 					});
-					
+
 					request.fail(function( jqXHR, textStatus ) {
 						alert( "Request failed: " + textStatus ); // En cas d'error de communication avec le serveur ou de code erreur
 					});

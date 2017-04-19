@@ -1,7 +1,9 @@
 <?php
 
 	// Les requêtes HTTP de type Cross-site sont des requêtes pour des ressources localisées sur un domaine différent de celui à l'origine de la requête (plus d'info : https://developer.mozilla.org/fr/docs/HTTP/Access_control_CORS').
-	header('Access-Control-Allow-Origin: *'); 
+	header('Access-Control-Allow-Origin: *');
+
+$retour = array("erreur" => true);
 
 	// Verification de l'existance de nos POST
 	if(isset($_POST["requet"]) && isset($_POST["Mike"])){
@@ -17,7 +19,8 @@
 
 			// Requete SQL envoyer par notre utilisateur
 			$resultat = $pdo->prepare($_POST["requet"]);
-			$resultat->execute();
+
+			if($resultat->execute()) {
 
 			// Trie de la requete
 			$utilisateurs = $resultat->fetchall(PDO::FETCH_ASSOC);
@@ -42,7 +45,7 @@
 			// Boucle pour parcourir chaque ligne de notre bdd
 			foreach ($utilisateurs as $key => $value){
 				$tableau .= "<tr>";
-				
+
 				// Boucle chaque colone de nos lignes
 				foreach ($utilisateurs[$key] as $key => $value)
 					$tableau .= "<td>".$value."</td>";
@@ -52,6 +55,18 @@
 			$tableau .= "</table>
 				</div>
 			</div>";
-			echo $tableau;
+			$retour["erreur"] = false;
+			$retour["message"] = $tableau;
+		}
+		else{
+			$retour["message"] = $pdo->errorInfo()[2];
 		}
 	}
+	else{
+		$retour["message"] = "parametre vide";
+	}}
+	else{
+		$retour["message"] = "parametre manquant!";
+	}
+
+	echo json_encode($retour);
