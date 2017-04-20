@@ -1,5 +1,5 @@
 <?php
-	header('Access-Control-Allow-Origin: *');
+	header('Access-Control-Allow-Origin: *');  
 
 
 	// CONNEXION BDD
@@ -11,13 +11,13 @@
 	// Requete SQL
 	$resultat = $pdo->prepare("SELECT * FROM utilisateurs");
 	$resultat->execute();
-
+	
 	// Trie de la requete
 	$utilisateurs = $resultat->fetchall(PDO::FETCH_ASSOC);
 
 	// Creation de la varible tableau
 	$tableau = "<table><tr>";
-
+	
 	// Bouble sur le premier element de notre table afin de recuperer les key.
 	foreach ($utilisateurs[0] as $key => $value){
 		$tableau .= '<th>'.$key.'</th>';
@@ -28,7 +28,7 @@
 	}
 
 	$tableau .= "</tr>";
-
+	
 	// Boucle pour parcourir chaque ligne de notre bdd
 	foreach ($utilisateurs as $key => $value){
 		$tableau .= "<tr>";
@@ -38,11 +38,12 @@
 		}
 		$tableau .= "</tr>";
 	}
-
+	
 	echo $tableau;
-
-
-
+	
+	
+	
 	// sleep(20);
 	// var_dump($utilisateurs);
 	// echo json_encode($utilisateurs);
+	
